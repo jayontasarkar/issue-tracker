@@ -6,10 +6,10 @@ const NewIssuePage = () => {
   return (
     <div className="max-w-xl space-y-5">
       <TextField.Root>
-        <TextField.Input placeholder="Issue Title" />
+        <TextField.Input placeholder="Issue Title" size="3" />
       </TextField.Root>
-      <TextArea placeholder="Issue Description" />
-      <Button>Submit New Issue</Button>
+      <TextArea placeholder="Issue Description" size="3" />
+      <Button size="3">Submit New Issue</Button>
     </div>
   );
 };
