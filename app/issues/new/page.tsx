@@ -1,6 +1,7 @@
 'use client';
 
 import ErrorMessage from '@/components/shared/ErrorMessage';
+import Spinner from '@/components/shared/Spinner';
 import { createIssueSchema } from '@/libs/validation/issueSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Callout, TextField } from '@radix-ui/themes';
@@ -28,16 +29,16 @@ const NewIssuePage = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
-  const createNewIssue = async (data: TCreateIssueInput) => {
+  const onSubmit = handleSubmit(async (data: TCreateIssueInput) => {
     setIsSubmitting(true);
     try {
       await axios.post('/api/issues', data);
       router.push('/issues');
     } catch (error: any) {
-      console.log(error);
+      setError(error?.message);
     }
     setIsSubmitting(false);
-  };
+  });
 
   return (
     <div className="max-w-xl ">
@@ -46,7 +47,7 @@ const NewIssuePage = () => {
           <Callout.Text>{error}</Callout.Text>
         </Callout.Root>
       )}
-      <form className="space-y-5" onSubmit={handleSubmit(createNewIssue)}>
+      <form className="space-y-5" onSubmit={onSubmit}>
         <TextField.Root>
           <TextField.Input
             placeholder="Issue Title"
@@ -72,6 +73,7 @@ const NewIssuePage = () => {
           disabled={isSubmitting}
         >
           Submit New Issue
+          {isSubmitting && <Spinner />}
         </Button>
       </form>
     </div>
