@@ -8,15 +8,11 @@ import { Issue } from '@prisma/client';
 import { Button, Callout, TextField } from '@radix-ui/themes';
 import axios from 'axios';
 import 'easymde/dist/easymde.min.css';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { SimpleMdeReact } from 'react-simplemde-editor';
 import { z } from 'zod';
-
-const SimpleMde = dynamic(() => import('react-simplemde-editor'), {
-  ssr: false,
-});
 
 type TIssueForm = z.infer<typeof issueSchema>;
 
@@ -79,7 +75,7 @@ const IssueForm = ({ issue }: Props) => {
           name="description"
           control={control}
           render={({ field }) => (
-            <SimpleMde placeholder="Issue Description" {...field} />
+            <SimpleMdeReact placeholder="Issue Description" {...field} />
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>

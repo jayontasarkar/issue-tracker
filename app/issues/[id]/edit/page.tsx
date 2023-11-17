@@ -1,6 +1,12 @@
-import IssueForm from '@/components/shared/issues/IssueForm';
+import IssueFormSkeleton from '@/components/shared/issues/IssueFormSkeleton';
 import prisma from '@/prisma/client';
+import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
+
+const IssueForm = dynamic(
+  () => import('@/components/shared/issues/IssueForm'),
+  { ssr: false, loading: () => <IssueFormSkeleton /> }
+);
 
 type Props = {
   params: {
