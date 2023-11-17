@@ -48,4 +48,10 @@ const IssueListPage = async () => {
   );
 };
 
+// Dynamic rendering, force to revalidate on every request
+// By default nextjs only uses dynamic rendering for routes that has
+// query params
+export const dynamic = 'force-dynamic'; // OR
+// export const revalidate = 0;
+
 export default IssueListPage;

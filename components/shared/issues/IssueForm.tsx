@@ -2,7 +2,7 @@
 
 import ErrorMessage from '@/components/shared/ErrorMessage';
 import Spinner from '@/components/shared/Spinner';
-import { createIssueSchema } from '@/libs/validation/issueSchema';
+import { issueSchema } from '@/libs/validation/issueSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Issue } from '@prisma/client';
 import { Button, Callout, TextField } from '@radix-ui/themes';
@@ -18,7 +18,7 @@ const SimpleMde = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
 
-type TIssueForm = z.infer<typeof createIssueSchema>;
+type TIssueForm = z.infer<typeof issueSchema>;
 
 type Props = {
   issue?: Issue;
@@ -36,7 +36,7 @@ const IssueForm = ({ issue }: Props) => {
       title: issue?.title || '',
       description: issue?.description || '',
     },
-    resolver: zodResolver(createIssueSchema),
+    resolver: zodResolver(issueSchema),
   });
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -45,8 +45,13 @@ const IssueForm = ({ issue }: Props) => {
   const onSubmit = handleSubmit(async (data: TCreateIssueInput) => {
     setIsSubmitting(true);
     try {
-      await axios.post('/api/issues', data);
+      if (issue) {
+        await axios.patch(`/api/issues/${issue.id}`, data);
+      } else {
+        await axios.post('/api/issues', data);
+      }
       router.push('/issues');
+      router.refresh();
     } catch (error: any) {
       setError(error?.message);
     }
@@ -85,7 +90,8 @@ const IssueForm = ({ issue }: Props) => {
           radius="full"
           disabled={isSubmitting}
         >
-          Submit New Issue
+          {issue ? 'Update Issue' : 'Submit New Issue'}
+          {` `}
           {isSubmitting && <Spinner />}
         </Button>
       </form>
